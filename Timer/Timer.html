@@ -28,6 +28,20 @@
             padding: 10px;
             font-size: 1em;
         }
+        #rightText {
+            position: absolute;
+            right: 40px; /* 距离右边的距离 */
+            top: 40px;   /* 距离顶部的距离 */
+            font-size: 1em;
+            color: black;
+        }
+		#leftText {
+            position: absolute;
+            left: 40px; /* 距离右边的距离 */
+            top: 40px;   /* 距离顶部的距离 */
+            font-size: 1em;
+            color: black;
+        }
     </style>
 </head>
 <body>
@@ -36,7 +50,9 @@
     <button onclick="startTimer()">开始</button>
     <button onclick="pauseTimer()">暂停/继续</button>
     <button onclick="resetTimer()">重置</button>
-	<button>点了也没用</button>
+	<button>此处可加超链接</button>
+	<div id="rightText">这里可以插入文本</div>
+	<div id="leftText">这里可以插入文本</div>
     <audio id="beep" src="Beep.m4a" preload="auto"></audio>
 	<audio id="beep2" src="Beep2.mp3" preload="auto"></audio>
     <script>
@@ -50,6 +66,7 @@
         const timerDisplay = document.getElementById('timer');
         const beepSound = document.getElementById('beep');
 		const beepSound2 = document.getElementById('beep2');
+		const ObjectTimer = document.getElementById('timer');
         function startTimer() {//开始
             const input = document.getElementById('timeInput').value;
             if (input>0) {
@@ -75,6 +92,7 @@
                         displayTime(Math.round(timeLeft));//显示时间
 						//分段处理滴答声
 						document.body.style.backgroundColor = Flag2?'lightblue':'lightcoral';
+						//ObjectTimer.style = "color:"+(Flag2?'lightblue':'lightcoral');
 						if (timeLeft>60){
 							if(Timer%10==0){
 							Timer=0;
@@ -100,6 +118,7 @@
 							beepSound.play();}
 						}
                         if (timeLeft <= 0) {
+							timeLeft=0;
 							if(Timer%10==0){
 								Timer=0;
 								document.body.style.backgroundColor = 'lightcoral';
