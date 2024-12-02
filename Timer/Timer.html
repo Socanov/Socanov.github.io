@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>倒计时</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            transition: background-color 0.5s;
+        }
+        #timer {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+        #timeInput {
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+	<div id="timer">00:00</div>
+    <input type="number" id="timeInput" placeholder="倒计时时间（秒）">
+    <button onclick="startTimer()">开始</button>
+    <button onclick="pauseTimer()">暂停/继续</button>
+    <button onclick="resetTimer()">重置</button>
+	<button>点了也没用</button>
+    <audio id="beep" src="Beep.m4a" preload="auto"></audio>
+	<audio id="beep2" src="Beep2.mp3" preload="auto"></audio>
+    <script>
+        let countdown;
+        let isPaused = false;
+        let timeLeft;
+        let originalTime;
+		let Flag = false;
+		let Flag2=false;
+		let Timer;
+        const timerDisplay = document.getElementById('timer');
+        const beepSound = document.getElementById('beep');
+		const beepSound2 = document.getElementById('beep2');
+        function startTimer() {//开始
+            const input = document.getElementById('timeInput').value;
+            if (input>0) {
+                originalTime = parseInt(input);
+			}
+			else{
+				originalTime = parseInt(180);
+			}
+			if(Flag){
+				clearInterval(countdown);
+			}
+			else{
+				Flag=true;
+			}
+            timeLeft = originalTime;
+            if (timeLeft > 0) {
+                isPaused = false;
+				Timer=0;
+                countdown = setInterval(() => {//计时器
+                    if (!isPaused) {
+                        timeLeft-=0.1;
+						Timer++;
+                        displayTime(Math.round(timeLeft));//显示时间
+						//分段处理滴答声
+						document.body.style.backgroundColor = Flag2?'lightblue':'lightcoral';
+						if (timeLeft>60){
+							if(Timer%10==0){
+							Timer=0;
+							Flag2=!Flag2;
+							beepSound.play();}
+						}
+						else if (timeLeft>30){
+							if(Timer%5==0){
+							Timer=0;
+							Flag2=!Flag2;
+							beepSound.play();}
+						}
+						else if (timeLeft>10){
+							if(Timer%3==0){
+							Timer=0;
+							Flag2=!Flag2;
+							beepSound.play();}
+						}
+						else if(timeLeft>0){
+							if(Timer%2==0){
+							Timer=0;
+							Flag2=!Flag2;
+							beepSound.play();}
+						}
+                        if (timeLeft <= 0) {
+							if(Timer%10==0){
+								Timer=0;
+								document.body.style.backgroundColor = 'lightcoral';
+								beepSound2.play();
+							}
+                        }
+                    }
+                }, 100);//每秒调用一次函数
+            }
+        }
+
+        function pauseTimer() {
+            isPaused = !isPaused;
+        }
+
+        function resetTimer() {
+            clearInterval(countdown);//删掉计时器（？
+            isPaused = false;
+            timeLeft = originalTime;
+            displayTime(timeLeft);
+            document.body.style.backgroundColor = 'white';
+        }
+
+        function displayTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainderSeconds = seconds % 60;
+            const display = `${minutes < 10 ? '0' : ''}${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
+            timerDisplay.textContent = display;
+        }
+    </script>
+</body>
+</html>
